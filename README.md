@@ -24,29 +24,9 @@ From OSMnx's documentation:
 
 >*OSMnx is a Python package that lets you download geospatial data from OpenStreetMap and model, project, visualize, and analyze real-world street networks and any other geospatial geometries.* 
 
-In the first half of the analysis I used OSMnx to download the walkable street network of the analysis area and to construct a graph from that network. A graph consists of edges (walkable paths in this case) and nodes (points in which the edges intersect).
-
-![Graph overview](docs/graph_overview.png)
-*The edges of Warsaw's walkable street network.*
 
 The resulting graph is very dense and has a ton of nodes. This can be problematic. For example, if two paths merge with a third path at just slightly different points, one real-life intersecion can turn into 2 nodes. In this analysis my aim was to to model actual intersections only, which is why I chose to simplify the graph a bit. I dissolved all nodes within five meters of each other into single nodes and excluded all dead-ends. The result is not perfect, but I think it represents the "real-life" intersections better than the original graph.
 
-![Graph comparison](docs/graph_comparison.png)
-*The original (left) and simplified (right) graphs side by side.*
-
-<br/>
-
-**Visualizing intersection density**
-
-The simplification nearly halved the intersection count: from 177 207 to 96 414. Still, a plain cluster of nodes isn't exactly an informative display of the data. To better visualize the spatial variance in the intersection density I first used Matplotlib's hexbin functionality and then experimented a bit with Seaborn's kernel density estimate (KDE) plots.
-
-![Intersection hexbin](docs/intersection_hexbin.png)
-*Intersections aggregated to a hexagonal grid*
-
-![Intersection kde](docs/intersection_kde.png)
-*Seaborn's KDE plotting is another cool way to visualize point densities.*
-
-<br/>
 
 ### 2. Walkability measured with access to sociable places
 
@@ -89,19 +69,9 @@ With this list of OSM tags I downloaded the corresponding points of interest (PO
 
 After the network was constructed, I ran the routing analysis with Pandana. The analysis calculates the travel time from every network node to a specified number of nearest POIs. I specified that 10 nearest POIs should be routed to which means that in the result every network node has a maximum of 10 different travel time values: time to to 1st, 2nd, 3rd, ... 10th nearest POI. The travel times are based on the assumption that the average walking speed is 4.5 km/h. Additionally I limited the analysis to only calculate travel times to POIs that are within a 15-minute walk.
 
-![Walk_access](docs/walk_access.png)
-*Walking time from every node to the nearest POI.*
-
 The resulting visualization is a bit cluttered. To get a clearer overview of the data, I once again used Matplotlib's hexbins. Instead of amounts of points, I calculated the average travel times for every hexagon this time.
 
 Another thing to note is that visualizing travel times only to the nearest POI probably isn't the ideal approach. For example, if one place had one cafe and another place had a cluster of multiple restaurants and shops, both places would look nearly identical on the map. Plotting the travel times to, for example, the 5th nearest POI would fix this, as singular features wouldn't affect the map as much. Below is a comparison of how the visualization changes when the selection of walking time is changed between nearest, 5th nearest and 10th nearest POI.
-
-![Walk_access_comparison](docs/walk_access_comparison.png)
-*Comparison of walking times to different routing targets.*
-
-This visualization is much better, and it clearly shows areas where sociable urban places can and cannot be accessed on foot. Some correlation can be found between these maps and the intersection density, but there are also areas that are noticeably more or less "walkable" depending on the method.
-
-<br/>
 
 ### 3. Conclusion
 
