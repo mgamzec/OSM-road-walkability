@@ -1,5 +1,47 @@
 ## Analysing urban walkability using OpenStreetMap and Python
 
+        ┌───────────────────────┐
+        │   OpenStreetMap (OSM) │
+        │   + Amenities data    │
+        └──────────┬────────────┘
+                   │
+                   ▼
+        ┌───────────────────────┐
+        │   Data Ingestion      │
+        │  (OSMnx, Pyrosm, SQL) │
+        └──────────┬────────────┘
+                   │
+                   ▼
+        ┌──────────────────────────────┐
+        │   Preprocessing & Enrichment │
+        │  - Clean geometries          │
+        │  - Road type classification  │
+        │  - Sidewalk / crossing tags  │
+        │  - Nearest amenities join    │
+        └──────────┬───────────────────┘
+                   │
+                   ▼
+        ┌──────────────────────────────┐
+        │  Walkability Scoring Engine  │
+        │  - Structural metrics        │
+        │    (intersection density,    │
+        │     block length, node deg.) │
+        │  - Infrastructural metrics   │
+        │    (sidewalks, crossings)    │
+        │  - Accessibility metrics     │
+        │    (amenity distance)        │
+        └──────────┬───────────────────┘
+                   │
+                   ▼
+        ┌───────────────────────┐
+        │   Outputs             │
+        │  - GeoJSON            │
+        │  - PostGIS / SQL DB   │
+        │  - Visual maps (QGIS, │
+        │    Kepler.gl, Mapbox) │
+        └───────────────────────┘
+
+
 Urban walkability can be understood and measured in many different ways. Because of this, the term is difficult to define. To say a place is walkable could for example mean that the network of streets is dense or that a wide selection of services is accessible on foot. Other urban elements such as green space, air quality or the amount of traffic affect walkability too.
 
 Here I will analyze urban walkability with two network-based approaches. First, I will focus on the structure of a street network by simply calculating intersection densities. Then, with a bit more complex approach, I will run a city-wide routing analysis to find out how different urban features can be accessed on foot within a city.
